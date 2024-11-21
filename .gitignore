@@ -4,3 +4,4 @@
 *.xls
 /.ipynb_checkpoints
 *.csv
+/.venv
