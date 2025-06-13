@@ -7,3 +7,4 @@
 /.venv
 *.xlsm
 /venv
+*.env
