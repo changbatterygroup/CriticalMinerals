@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 from Layout import layout
 import constants as c
+from functools import lru_cache
 
 
 # Define a fixed color mapping for cathode types
@@ -13,12 +14,14 @@ lib_cathodes = ['LiFePO4', 'LiCoO2', 'LiCo2O4','LiTiS2','LiMn2O4', 'LiMnO2','LiN
 mineral_colors =  ['#636efa','#EF553B', "#6cd7ba", '#ab63fa']
 nmc_colors = dict(zip(nmc_cathodes, mineral_colors))
 
+@lru_cache
+def load_data():
+    combined = pd.read_parquet("Assets/CombinedMiningData.parquet")
+    reserves = pd.read_parquet("Assets/CumulativeReserves.parquet")
+    demand_by_cathode = pd.read_parquet("Assets/DemandByCathode.parquet")
+    return combined, reserves, demand_by_cathode
 
-combined = pd.read_parquet("Assets/CombinedMiningData.parquet")
-reserves = pd.read_parquet("Assets/CumulativeReserves.parquet")
-demand_by_cathode = pd.read_parquet("Assets/DemandByCathode.parquet")
-
-
+combined, reserves, demand_by_cathode = load_data()
 
 def plot_cathodes(reserves_df, demand_df, cathodes, cathode_title, offset=0.1, cathode_colors=None):
     minerals = reserves_df["Primary Mineral"].unique()
@@ -106,6 +109,7 @@ from dash import dcc
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 app.title = "Critical Minerals Assessments"
+server = app.server
 
 app.layout = layout
 
@@ -135,6 +139,6 @@ def on_submit(porosity, click):
 # Run the app
 
 if __name__ == "__main__":
-    app.run(debug=True, port=8090, jupyter_mode="external") 
+    server.run(debug=True, port=8090) 
 
 
