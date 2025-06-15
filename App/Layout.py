@@ -1,5 +1,5 @@
 from dash import html, dcc
-import constants as c
+import App.constants as c
 
 
 layout = html.Div([

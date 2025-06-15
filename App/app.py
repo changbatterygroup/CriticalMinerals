@@ -3,8 +3,8 @@ import plotly.graph_objects as go
 import plotly.express as px
 import numpy as np
 import pandas as pd
-from Layout import layout
-import constants as c
+from App.Layout import layout
+import App.constants as c
 from functools import lru_cache
 
 
