@@ -128,7 +128,8 @@ def update_dropdown(selected_value):
         raise dash.exceptions.PreventUpdate()
 
 @app.callback(
-    [State(c.P_INPUT_ID, 'value'), Input(c.BUTTON_ID, 'n_clicks')]
+    State(c.P_INPUT_ID, 'value'), 
+    Input(c.BUTTON_ID, 'n_clicks')
 )
 def on_submit(porosity, click):
     if click and porosity is not None:
