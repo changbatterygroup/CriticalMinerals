@@ -8,4 +8,4 @@
 *.xlsm
 /venv
 *.env
-/pycache
+__pycache__
