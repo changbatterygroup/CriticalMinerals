@@ -6,3 +6,4 @@ dash
 scikit-learn
 matplotlib
 plotly
+gunicorn
