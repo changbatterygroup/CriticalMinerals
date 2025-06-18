@@ -1,7 +1,7 @@
 # App/components/form.py
 from dash import html, dcc
 import App.constants as c
-from App.components.base import *
+from App.components.base import StaticComponent
 
 class FormComponent(StaticComponent):
     def __init__(self):
