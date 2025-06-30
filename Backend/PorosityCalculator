@@ -1,0 +1,48 @@
+import numpy as np
+import pybamm
+
+class PorosityCalculator:
+    def __init__(self, simulation):
+        self.simulation = simulation
+
+    def calculate_voltage(self, time, porosity):
+        soln = self.simulation.solve(time, inputs={"Positive electrode porosity": porosity})
+        voltage = np.mean(soln["Positive electrode bulk open-circuit potential [V]"].data) 
+        return voltage
+    
+    
+    class Builder():
+        def __init__(self):
+    
+            self._model = None
+            self._params = None
+            self._solver = None
+
+        def set_model(self, model):
+            self._model = model
+            return self
+
+        def set_params(self, params):
+            self._params = params
+            return self
+        
+        def update_params(self, updates):
+            if self._params is None:
+                raise ValueError("Parameter values must be set before updating.")
+            for key, value in updates.items():
+                self._params[key] = value
+            return self
+
+        def set_solver(self, solver):
+            self._solver = solver
+            return self
+
+
+        def build(self):
+            # Fill in placeholders if needed
+            simulation = pybamm.Simulation(
+                model=self._model,
+                parameter_values=self._params,
+                solver=self._solver,
+            )
+            return PorosityCalculator(simulation)

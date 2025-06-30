@@ -12,10 +12,10 @@ class DemandPlotter(Plotter):
         self.calc = DemandCalculator()
 
     
-    def plot(self, nmc_percentage):
+    def plot(self, nmc_percentage, type):
         self.fig = self.reserve_p.plot()
         
-        traces = self.get_traces(nmc_percentage / 100, "NMC811", 3.5)
+        traces = self.get_traces(nmc_percentage / 100, type, 3.5)
         
         # Map traces to subplots based on mineral name
         mineral_subplot_map = {

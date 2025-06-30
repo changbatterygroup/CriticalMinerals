@@ -31,9 +31,18 @@ class MainApp:
         self.app.layout = html.Div([
             html.H1("Critical Minerals Assessments"),
             html.P("This dashboard analyzes critical mineral reserves and battery material demand."),
-            self.form.layout,
             html.Br(),
-            self.reserves.layout,
+            html.Div([
+                html.Div(self.form.layout, style={'flex': '0.5'}),
+                html.Div(self.reserves.layout, style={'flex': '1'}),
+            ], style={
+                    'display': 'flex',
+                    'width': '100%',
+                    'align-items': 'flex-start',
+                    'justify-content': 'space-between',
+                    'gap': '20px'
+              }),
+
         ])
 
         # Register all component callbacks
