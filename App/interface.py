@@ -10,7 +10,7 @@ class MainApp:
     def __load_data(self):
         self.reserves_data = DataLoader.get('cumulative_reserves')
         self.capacity_data = DataLoader.get('capacity')
-        
+       
         
     
     def __init__(self):
@@ -26,7 +26,7 @@ class MainApp:
         # Initialize components
         self.form = FormComponent()
         self.reserves = ReservesComponent(self.reserves_data, self.capacity_data)
-
+        
         # Layout
         self.app.layout = html.Div([
             html.H1("Critical Minerals Assessments"),
@@ -46,7 +46,7 @@ class MainApp:
         ])
 
         # Register all component callbacks
-        # self.form.register_callbacks(self.app)
+        self.form.register_callbacks(self.app)
         self.reserves.register_callbacks(self.app)
 
     def run(self, port):

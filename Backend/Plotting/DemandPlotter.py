@@ -41,10 +41,10 @@ class DemandPlotter(Plotter):
         total_Li = LFP_Li + NMC_Li
 
         traces = [
-            go.Scatter(x=self.data['Year'], y=Co_mass, mode='lines+markers', name='Cobalt', line=dict(color='darkorange')),
-            go.Scatter(x=self.data['Year'], y=total_Li, mode='lines+markers', name='Lithium', line=dict(color='royalblue')),
-            go.Scatter(x=self.data['Year'], y=Ni_mass, mode='lines+markers', name='Nickel', line=dict(color='gold')),
-            go.Scatter(x=self.data['Year'], y=Mn_mass, mode='lines+markers', name='Manganese', line=dict(color='yellowgreen')),
+            go.Scatter(x=self.data['Year'], y=Co_mass, mode='lines+markers', name='Cobalt', line=dict(color='darkorange'), showlegend=False),
+            go.Scatter(x=self.data['Year'], y=total_Li, mode='lines+markers', name='Lithium', line=dict(color='royalblue'),showlegend=False),
+            go.Scatter(x=self.data['Year'], y=Ni_mass, mode='lines+markers', name='Nickel', line=dict(color='gold'),showlegend=False),
+            go.Scatter(x=self.data['Year'], y=Mn_mass, mode='lines+markers', name='Manganese', line=dict(color='yellowgreen'),showlegend=False),
         
         ]
         return traces

@@ -1,25 +1,102 @@
 # App/components/form.py
-from dash import html, dcc
-import App.constants as c
-from App.constants import Form as f
-from App.components.base import StaticComponent
+from dash import html, dcc, Input, Output, State
+from App.constants import CAPACITIES
+from App.constants import FormConfig as fc
+from App.components.base import StaticComponent, FunctionalComponent
 
-class FormComponent(StaticComponent):
+
+class FormComponent(FunctionalComponent):
     def __init__(self):
+        cathodes = list(CAPACITIES.keys())
+        
         self.layout = html.Div([
-            dcc.Dropdown(id=f.CATHODE_DROPDOWN_ID.value, options=c.NMC, value=c.NMC[0], clearable=False),
+            dcc.Dropdown(id=fc.CATHODE_DROPDOWN_ID, options=cathodes[:-2], value=cathodes[0], clearable=False),
             html.Br(),
             html.Div([
-                html.Label(id=f.NMC_LABEL_ID.value ,style={'font-weight': 'bold', 'padding-right': '12px'}),
-                dcc.Slider(id=f.NMC_INPUT_ID.value, min=0, max=100, step = 5, value=50, marks={
-                    i: str(i) + '%' for i in range(0, 101, 25)}),
+                html.Label(id=fc.NMC.label_id ,style={'font-weight': 'bold', 'padding-right': '12px'}),
+                dcc.Slider(id=fc.NMC.input_id, 
+                           min=fc.NMC.val_range[0], 
+                           max=fc.NMC.val_range[1], 
+                           step = fc.NMC.step, 
+                           value=fc.NMC.default_value, 
+                           marks={
+                    i: str(i) for i in range(fc.NMC.val_range[0], fc.NMC.val_range[1] + 1, 25)}),
                 
             ]),
-            
+            html.Br(),
             html.Div([
-                html.Label(id=f.P_PCT.value, style={'font-weight': 'bold', 'padding-right': '10px'}),
-                dcc.Slider(id=f.P_INPUT_ID.value, min=10, max=30, step=2 ,marks={
-                    i: str(i) + '%' for i in range(10, 30+1, 10)}, value=25) 
+                html.Label(id=fc.POROSITY.label_id, 
+                           style={'font-weight': 'bold', 'padding-right': '10px'}
+                           ),
+                dcc.Slider(
+                           id=fc.POROSITY.input_id, 
+                           min=fc.POROSITY.val_range[0], 
+                           max=fc.POROSITY.val_range[1], 
+                           step = fc.POROSITY.step, 
+                           value=fc.POROSITY.default_value,
+                           marks={
+                    i: str(i) for i in range(fc.POROSITY.val_range[0], fc.POROSITY.val_range[1]+1, 10)
+                    })
+            ]),
+            html.Br(),
+            html.Div([
+                html.Label(id=fc.THICKNESS.label_id, 
+                           style={'font-weight': 'bold', 'padding-right': '10px'}),
+                dcc.Slider(id=fc.THICKNESS.input_id, 
+                           min=fc.THICKNESS.val_range[0], 
+                           max=fc.THICKNESS.val_range[1],
+                           step = fc.THICKNESS.step,
+                           value=fc.THICKNESS.default_value,
+                           marks={
+                    i: str(i) for i in range(fc.THICKNESS.val_range[0], fc.THICKNESS.val_range[1]+1, 10)
+                    }
+                    ) 
+            ]),
+            html.Br(),
+            html.Div([
+                html.Label(id=fc.PARTICLE_SIZE.label_id, 
+                           style={'font-weight': 'bold', 'padding-right': '10px'}),
+                dcc.Slider(id=fc.PARTICLE_SIZE.input_id, 
+                           min=fc.PARTICLE_SIZE.val_range[0], 
+                           max=fc.PARTICLE_SIZE.val_range[1],
+                           step = fc.PARTICLE_SIZE.step,
+                           value=fc.PARTICLE_SIZE.default_value,
+                    ) 
             ]),
             
         ], id="form-box")
+
+
+
+    def register_callbacks(self, app):
+        @app.callback(
+            Output(fc.NMC.label_id, 'children'),
+            Input(fc.NMC.input_id, 'value'),
+        )
+        def update_nmc(nmc_percentage):
+            return f"NMC Composition: {nmc_percentage}%"
+        
+        
+        @app.callback(
+            Output(fc.THICKNESS.label_id, 'children'),
+            Input(fc.THICKNESS.input_id, 'value'),
+        )
+        def update_thickness_label(thickness):
+            return f"Thickness: {thickness} µm"
+        
+        
+        @app.callback(
+            Output(fc.POROSITY.label_id, 'children'),
+            Input(fc.POROSITY.input_id, 'value'),
+        )
+        def update_porosity(porosity):
+            return f"Porosity: {porosity} µm"
+        
+
+        
+        @app.callback(
+            Output(fc.PARTICLE_SIZE.label_id, 'children'),
+            Input(fc.PARTICLE_SIZE.input_id, 'value'),
+        )
+        def update_particle_size(particle_size):
+            return f"Particle Size: {particle_size} µm radius"

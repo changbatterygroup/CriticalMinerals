@@ -1,27 +1,80 @@
 from enum import Enum
+from dataclasses import dataclass
+from typing import Optional, Tuple, Dict
+
 
 
 BUTTON_ID = 'submit_button'
-CATHODE_DROPDOWN_ID = "cathode-dropdown"
 BODY_ID = "placeholder"
-P_INPUT_ID = 'porosity-input'
-P_PCT_ID = 'porosity-pct-label'
 
-NMC_INPUT_ID = 'nmc-input'
+
+CAPACITIES = {
+            "NMC622": 0.180, 
+            "NMC811": 0.200,
+            "NMC532": 0.170,
+            "NMC111": 0.160,
+            "LFP":    0.120,
+            "LCO":    0.140
+            }
+    
+
+
+
 RESERVES_PLOT_ID = 'reserves-plot'
-NMC_LABEL_ID = 'NMC-label'
+
 
 NMC = ["NMC622", "NMC811", "NMC532", "NMC111", "LIB"]
 
+@dataclass
+class FormFields:
+    input_id: str
+    label_id: str
+    default_value: int
+    val_range:  Tuple[int, int]
+    step: Optional[float] = None
 
-class Form(Enum):
+
+
+class FormConfig:
     CATHODE_DROPDOWN_ID = "cathode-dropdown"
-    NMC_INPUT_ID = 'nmc-input'
-    NMC_LABEL_ID = 'NMC-label'
-    P_INPUT_ID = 'porosity-input'
-    P_PCT = 'porosity-pct-label'
+
+    
+    NMC = FormFields(
+        input_id='nmc-input',
+        label_id='NMC-label',
+        val_range=(0, 100),
+        step=5,
+        default_value=50
+    )
+    
+    
+    POROSITY = FormFields(
+        input_id='porosity-input',
+        label_id='porosity-pct-label',
+        val_range=(10, 30),
+        step=2,
+        default_value=25
+    )
+    
+    THICKNESS = FormFields(
+        input_id='thickness-input',
+        label_id='thickness-pct-label',
+        val_range=(50, 120),
+        step=5,
+        default_value=15
+    )
+    
+    PARTICLE_SIZE = FormFields(
+        input_id='particle-size-input',
+        label_id='particle-size-label',
+        val_range=(10, 20),
+        step=5,
+        default_value=15
+    )
+    
     
 
+    
 
 
 class DropDownOptions(Enum):

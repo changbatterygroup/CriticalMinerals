@@ -1,17 +1,11 @@
 import numpy as np
+from App.constants import CAPACITIES
 
 class DemandCalculator():
     
     def __init__(self, elyte = 0.005863):
         self.elyte = elyte
-        self.capacities = {
-            "NMC622": 0.180, 
-            "NMC811": 0.200,
-            "NMC532": 0.170,
-            "NMC111": 0.160,
-            "LFP":    0.120,
-            "LCO":    0.140,
-        }
+        self.capacities = CAPACITIES
         
         self.compositions_arr = np.array([
             [0.07162 + elyte, 0.3634, 0.1134, 0.1216],
