@@ -1,11 +1,13 @@
 import numpy as np
-from App.constants import CAPACITIES
+from common.constants import CAPACITIES
+
 
 class DemandCalculator():
     
     def __init__(self, elyte = 0.005863):
         self.elyte = elyte
         self.capacities = CAPACITIES
+
         
         self.compositions_arr = np.array([
             [0.07162 + elyte, 0.3634, 0.1134, 0.1216],
@@ -18,7 +20,7 @@ class DemandCalculator():
         
         self.compositions = {comp: self.compositions_arr[i] for i, comp in enumerate(self.capacities)}
         
-    def AM_calc(self, GWh,voltage, type):
+    def AM_calc(self, GWh, voltage, type):
         GWH = np.array(GWh)  # convert to numpy array for element-wise operations
         if type not in self.capacities: 
             raise ValueError(f'{type} is an unsupported cathode at this time.')
@@ -27,6 +29,6 @@ class DemandCalculator():
         elements = self.compositions[type] # wt% Li, Ni, Mn, Co
         return ((GWH[:, None] * 10e3) / (voltage * cap) * elements).T
     
-
+    
 
 

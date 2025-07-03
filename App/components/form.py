@@ -1,8 +1,10 @@
-# App/components/form.py
+
 from dash import html, dcc, Input, Output, State
-from App.constants import CAPACITIES
-from App.constants import FormConfig as fc
+from common.constants import CAPACITIES
+from common.constants import FormConfig as fc
 from App.components.base import StaticComponent, FunctionalComponent
+
+
 
 
 class FormComponent(FunctionalComponent):
@@ -15,6 +17,7 @@ class FormComponent(FunctionalComponent):
             html.Div([
                 html.Label(id=fc.NMC.label_id ,style={'font-weight': 'bold', 'padding-right': '12px'}),
                 dcc.Slider(id=fc.NMC.input_id, 
+    
                            min=fc.NMC.val_range[0], 
                            max=fc.NMC.val_range[1], 
                            step = fc.NMC.step, 
@@ -30,6 +33,7 @@ class FormComponent(FunctionalComponent):
                            ),
                 dcc.Slider(
                            id=fc.POROSITY.input_id, 
+
                            min=fc.POROSITY.val_range[0], 
                            max=fc.POROSITY.val_range[1], 
                            step = fc.POROSITY.step, 
@@ -43,6 +47,7 @@ class FormComponent(FunctionalComponent):
                 html.Label(id=fc.THICKNESS.label_id, 
                            style={'font-weight': 'bold', 'padding-right': '10px'}),
                 dcc.Slider(id=fc.THICKNESS.input_id, 
+
                            min=fc.THICKNESS.val_range[0], 
                            max=fc.THICKNESS.val_range[1],
                            step = fc.THICKNESS.step,
@@ -56,7 +61,8 @@ class FormComponent(FunctionalComponent):
             html.Div([
                 html.Label(id=fc.PARTICLE_SIZE.label_id, 
                            style={'font-weight': 'bold', 'padding-right': '10px'}),
-                dcc.Slider(id=fc.PARTICLE_SIZE.input_id, 
+                dcc.Slider(id=fc.PARTICLE_SIZE.input_id,
+                            
                            min=fc.PARTICLE_SIZE.val_range[0], 
                            max=fc.PARTICLE_SIZE.val_range[1],
                            step = fc.PARTICLE_SIZE.step,
@@ -65,7 +71,7 @@ class FormComponent(FunctionalComponent):
             ]),
             
         ], id="form-box")
-
+        
 
 
     def register_callbacks(self, app):

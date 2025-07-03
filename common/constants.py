@@ -61,7 +61,7 @@ class FormConfig:
         label_id='thickness-pct-label',
         val_range=(50, 120),
         step=5,
-        default_value=15
+        default_value=50
     )
     
     PARTICLE_SIZE = FormFields(

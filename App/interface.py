@@ -32,6 +32,7 @@ class MainApp:
             html.H1("Critical Minerals Assessments"),
             html.P("This dashboard analyzes critical mineral reserves and battery material demand."),
             html.Br(),
+            
             html.Div([
                 html.Div(self.form.layout, style={'flex': '0.5'}),
                 html.Div(self.reserves.layout, style={'flex': '1'}),
@@ -41,7 +42,7 @@ class MainApp:
                     'align-items': 'flex-start',
                     'justify-content': 'space-between',
                     'gap': '20px'
-              }),
+              })
 
         ])
 
