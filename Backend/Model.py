@@ -28,8 +28,8 @@ class Model(Calculator):
             "Positive electrode thickness [m]": thickness,
         })
         self._param_set.update(inputs)
-        
-        sim = pybamm.Simulation(model=self._model, parameter_values=self._param_set, solver=self._solver)
+        model = pybamm.lithium_ion.DFN()
+        sim = pybamm.Simulation(model=model, parameter_values=self._param_set, solver=self._solver)
         soln = sim.solve(time, inputs={"Positive electrode porosity": por}, initial_soc=1)
         return soln["Voltage [V]"].data.mean()
 
