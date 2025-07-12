@@ -1,5 +1,3 @@
-# App/app.py
-
 from dash import Dash, html
 from App.components.form import FormComponent
 from App.components.reserves import ReservesComponent
@@ -11,8 +9,6 @@ class MainApp:
         self.reserves_data = DataLoader.get('cumulative_reserves')
         self.capacity_data = DataLoader.get('capacity')
        
-        
-    
     def __init__(self):
         self.app = Dash(__name__, external_stylesheets=[
             'https://codepen.io/chriddyp/pen/bWLwgP.css'
@@ -32,17 +28,10 @@ class MainApp:
             html.H1("Critical Minerals Assessments"),
             html.P("This dashboard analyzes critical mineral reserves and battery material demand."),
             html.Br(),
-            
             html.Div([
-                html.Div(self.form.layout, style={'flex': '0.5'}),
-                html.Div(self.reserves.layout, style={'flex': '1'}),
-            ], style={
-                    'display': 'flex',
-                    'width': '100%',
-                    'align-items': 'flex-start',
-                    'justify-content': 'space-between',
-                    'gap': '20px'
-              })
+                html.Div(self.form.layout),
+                html.Div(self.reserves.layout),
+            ])
 
         ])
 

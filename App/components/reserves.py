@@ -1,31 +1,30 @@
 from dash import html, dcc, Input, Output, State
-from common.constants import *
-from Backend.Plotting.ReservesPlotter import ReservesPlotter
-from Backend.Plotting.DemandPlotter import DemandPlotter
-from App.components.base import *
+from common.constants import RESERVES_PLOT_ID
+from Backend.plot import plot_reserves ,plot_reserves_and_demand
+from App.components.base import Component
 from common.constants import FormConfig as fc
 import dash.exceptions
 
-class ReservesComponent(FunctionalComponent):
+
+class ReservesComponent(Component):
     def __init__(self, reserves_data, capacity_data):
-        super().__init__()
         self.reserves_data = reserves_data
         self.capacity_data = capacity_data
-        self.reserves_plotter = ReservesPlotter(self.reserves_data)
-        self.layout = html.Div([
+        
+    @property    
+    def layout(self):
+        return html.Div([
             html.H3("Mineral Reserves Over Time"),
             dcc.Loading(
-                dcc.Graph(id=RESERVES_PLOT_ID,
-                          figure=self.reserves_plotter.plot()
+                dcc.Graph(id = RESERVES_PLOT_ID,
+                          figure = plot_reserves(self.reserves_data)[0]     
                 ),
             overlay_style={"visibility":"visible", "opacity": .5},
             )
         ])
+        
 
     def register_callbacks(self, app):
-        
-        demand_plotter = DemandPlotter(self.capacity_data, self.reserves_plotter)
-        
         
         @app.callback(
              Output(RESERVES_PLOT_ID, 'figure'),
@@ -36,11 +35,16 @@ class ReservesComponent(FunctionalComponent):
              Input(fc.THICKNESS.input_id, 'value'),
              ]
         )
-        def update_reserves_plot(nmc_percentage, type, por, radius, thickness, ):
-            if nmc_percentage is None or type is None:
-                raise dash.exceptions.PreventUpdate
+        def update_reserves_plot(nmc_percentage, type, por, radius, thickness):
             
-            return demand_plotter.plot(nmc_percentage, type, por, radius, thickness)
+            return plot_reserves_and_demand(self.reserves_data, 
+                                            self.capacity_data, 
+                                            nmc_percentage, 
+                                            type,
+                                            por,
+                                            radius,
+                                            thickness
+                                            )
 
 
 

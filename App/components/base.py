@@ -1,25 +1,15 @@
 from abc import ABC, abstractmethod
-
+from dash.html import Div, Label
+from dash.dcc import Slider
+from common.constants import FormConfig as fc
 
 class Component(ABC):
+    
+    
+    @property
     @abstractmethod
-    def __init__(self):
-        self.layout = None
-    
-    
-class StaticComponent(Component, ABC):
-    
-    @abstractmethod
-    def __init__(self):
+    def layout(self)-> Div: 
         ...
         
 
-class FunctionalComponent(Component, ABC):
-    
-    def __init__(self, *args):
-        ...
-    
-    
-    @abstractmethod
-    def register_callbacks(self, app):
-        ...
+

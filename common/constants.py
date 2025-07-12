@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import Optional, Tuple, Dict
 
 
-
+RESERVES_PLOT_ID = 'reserves-plot'
 BUTTON_ID = 'submit_button'
 BODY_ID = "placeholder"
 
@@ -17,11 +17,6 @@ CAPACITIES = {
             "LCO":    0.140
             }
     
-
-
-
-RESERVES_PLOT_ID = 'reserves-plot'
-
 
 NMC = ["NMC622", "NMC811", "NMC532", "NMC111", "LIB"]
 
@@ -53,7 +48,7 @@ class FormConfig:
         label_id='porosity-pct-label',
         val_range=(10, 30),
         step=2,
-        default_value=25
+        default_value=15
     )
     
     THICKNESS = FormFields(

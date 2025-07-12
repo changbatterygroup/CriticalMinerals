@@ -2,77 +2,41 @@
 from dash import html, dcc, Input, Output, State
 from common.constants import CAPACITIES
 from common.constants import FormConfig as fc
-from App.components.base import StaticComponent, FunctionalComponent
+from App.components.base import *
 
 
-
-
-class FormComponent(FunctionalComponent):
+class FormComponent(Component):
     def __init__(self):
-        cathodes = list(CAPACITIES.keys())
-        
-        self.layout = html.Div([
-            dcc.Dropdown(id=fc.CATHODE_DROPDOWN_ID, options=cathodes[:-2], value=cathodes[0], clearable=False),
-            html.Br(),
-            html.Div([
-                html.Label(id=fc.NMC.label_id ,style={'font-weight': 'bold', 'padding-right': '12px'}),
-                dcc.Slider(id=fc.NMC.input_id, 
+        self.cathodes = list(CAPACITIES.keys())
+
     
-                           min=fc.NMC.val_range[0], 
-                           max=fc.NMC.val_range[1], 
-                           step = fc.NMC.step, 
-                           value=fc.NMC.default_value, 
-                           marks={
-                    i: str(i) for i in range(fc.NMC.val_range[0], fc.NMC.val_range[1] + 1, 25)}),
-                
-            ]),
+    def __build_slider_input(self, f, marker_step: int=1):
+        minimum, maximum = f.val_range
+        return html.Div([
+                html.Label(id=f.label_id ,style={'font-weight': 'bold', 'padding-right': '12px'}),
+                dcc.Slider(id=f.input_id, 
+                           min=minimum, 
+                           max=maximum, 
+                           step = f.step, 
+                           value=f.default_value, 
+                           marks={i: str(i) for i in range(minimum, maximum + 1, marker_step)}),
+                ])
+        
+        
+    @property
+    def layout(self):
+        return html.Div([
+            dcc.Dropdown(id=fc.CATHODE_DROPDOWN_ID, options=self.cathodes[:-2], value=self.cathodes[0], clearable=False),
             html.Br(),
-            html.Div([
-                html.Label(id=fc.POROSITY.label_id, 
-                           style={'font-weight': 'bold', 'padding-right': '10px'}
-                           ),
-                dcc.Slider(
-                           id=fc.POROSITY.input_id, 
-
-                           min=fc.POROSITY.val_range[0], 
-                           max=fc.POROSITY.val_range[1], 
-                           step = fc.POROSITY.step, 
-                           value=fc.POROSITY.default_value,
-                           marks={
-                    i: str(i) for i in range(fc.POROSITY.val_range[0], fc.POROSITY.val_range[1]+1, 10)
-                    })
-            ]),
+            self.__build_slider_input(fc.NMC, 25),
             html.Br(),
-            html.Div([
-                html.Label(id=fc.THICKNESS.label_id, 
-                           style={'font-weight': 'bold', 'padding-right': '10px'}),
-                dcc.Slider(id=fc.THICKNESS.input_id, 
-
-                           min=fc.THICKNESS.val_range[0], 
-                           max=fc.THICKNESS.val_range[1],
-                           step = fc.THICKNESS.step,
-                           value=fc.THICKNESS.default_value,
-                           marks={
-                    i: str(i) for i in range(fc.THICKNESS.val_range[0], fc.THICKNESS.val_range[1]+1, 10)
-                    }
-                    ) 
-            ]),
+            self.__build_slider_input(fc.POROSITY, 5),
             html.Br(),
-            html.Div([
-                html.Label(id=fc.PARTICLE_SIZE.label_id, 
-                           style={'font-weight': 'bold', 'padding-right': '10px'}),
-                dcc.Slider(id=fc.PARTICLE_SIZE.input_id,
-                            
-                           min=fc.PARTICLE_SIZE.val_range[0], 
-                           max=fc.PARTICLE_SIZE.val_range[1],
-                           step = fc.PARTICLE_SIZE.step,
-                           value=fc.PARTICLE_SIZE.default_value,
-                    ) 
-            ]),
+            self.__build_slider_input(fc.THICKNESS, 10),
+            html.Br(),
+            self.__build_slider_input(fc.PARTICLE_SIZE, 5),
             
         ], id="form-box")
-        
-
 
     def register_callbacks(self, app):
         @app.callback(
@@ -96,9 +60,7 @@ class FormComponent(FunctionalComponent):
             Input(fc.POROSITY.input_id, 'value'),
         )
         def update_porosity(porosity):
-            return f"Porosity: {porosity} µm"
-        
-
+            return f"Porosity: {porosity} %"
         
         @app.callback(
             Output(fc.PARTICLE_SIZE.label_id, 'children'),

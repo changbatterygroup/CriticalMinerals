@@ -27,7 +27,7 @@ class DemandCalculator():
 
         cap = self.capacities[type] # Ah/g
         elements = self.compositions[type] # wt% Li, Ni, Mn, Co
-        return ((GWH[:, None] * 10e3) / (voltage * cap) * elements).T
+        return ((GWH[:, None] * 1e3) / (voltage * cap) * elements).T
     
     
 
