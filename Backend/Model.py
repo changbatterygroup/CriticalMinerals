@@ -42,13 +42,13 @@ class ModelFactory:
     def create(self, model_type):
         if model_type.lower() == "lfp":
             params = pybamm.ParameterValues("Prada2013")
-            return Model(params, solver=pybamm.CasadiSolver(rtol=1e-3, atol=1e-5, dt_max=0.8,
+            return Model(params, solver=pybamm.CasadiSolver(rtol=1e-3, atol=1e-5, dt_max=0.5,
                                                             return_solution_if_failed_early = True
                                                             ))
                 
         elif model_type.lower() == "nmc":
             params = pybamm.ParameterValues("Chen2020")
-            return Model(params, solver=pybamm.CasadiSolver(rtol=1e-3, atol=1e-5, dt_max=0.8, 
+            return Model(params, solver=pybamm.CasadiSolver(rtol=1e-3, atol=1e-5, dt_max=0.5, 
                                                             return_solution_if_failed_early = True
                                                             ))
         else:
