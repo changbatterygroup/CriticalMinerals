@@ -1,17 +1,19 @@
 from dash import Dash, html
-from App.components.form import FormComponent
-from App.components.reserves import ReservesComponent
-from Backend.DataLoader import DataLoader
+from .components.form import FormComponent
+from .components.reserves import ReservesComponent
+from . import DataLoader
+from typing import List
 
 class MainApp:
     
     def __load_data(self):
         self.reserves_data = DataLoader.get('cumulative_reserves')
         self.capacity_data = DataLoader.get('capacity')
-       
+        
+
     def __init__(self):
         self.app = Dash(__name__, external_stylesheets=[
-            'https://codepen.io/chriddyp/pen/bWLwgP.css'
+            'https://codepen.io/chriddyp/pen/bWLwgP.css',
         ])
         
         self.server = self.app.server
@@ -28,17 +30,19 @@ class MainApp:
             html.H1("Critical Minerals Assessments"),
             html.P("This dashboard analyzes critical mineral reserves and battery material demand."),
             html.Br(),
+            
             html.Div([
-                html.Div(self.form.layout),
-                html.Div(self.reserves.layout),
-            ])
-
+                self.form.render(self.app),
+                self.reserves.render(self.app),
+            ], style={
+                    "display": "flex",
+                    "flexDirection": "row",  # use "column" for vertical layout
+                    "gap": "10px"
+                }
+            )
         ])
 
-        # Register all component callbacks
-        self.form.register_callbacks(self.app)
-        self.reserves.register_callbacks(self.app)
-
+    
     def run(self, port):
         self.server.run(debug=True, port=port)
 

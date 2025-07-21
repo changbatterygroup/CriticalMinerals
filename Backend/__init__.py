@@ -1,1 +1,1 @@
-from common import constants
+from core import constants as c
