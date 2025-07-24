@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Optional, Tuple
 from dash.html import Div, Label
 from dash.dcc import Slider
-from core import ids as c
+from core.configs import ids as c
 
 
 @dataclass
@@ -33,15 +33,6 @@ class FormFields:
 
 def get_fields():
         return [
-        FormFields(
-            input_id=c.NMC_INPUT_ID,
-            label_id=c.NMC_LABEL_ID,
-            val_range=(0, 100),
-            step=5,
-            marker_step=25,
-            default_value=50,
-            label_format="NMC Composition: {}%"
-        ),
 
         FormFields(
             input_id=c.POROSITY_INPUT_ID,

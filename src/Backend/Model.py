@@ -12,7 +12,7 @@ class Model(FromConfigMixin):
     
     def __init__(self, param_template: pybamm.ParameterValues, solver=None):
         self._param_set =  param_template
-        self._solver = solver or pybamm.IDAKLUSolver(atol=1e-5, rtol=1e-3)
+        self._solver = solver or pybamm.IDAKLUSolver(atol=1e-4, rtol=1e-2)
         
     @classmethod
     def _from_spec(cls, name, spec):
@@ -39,7 +39,7 @@ class Model(FromConfigMixin):
         self._param_set.update(inputs)
 
         sim = pybamm.Simulation(model=pybamm.lithium_ion.DFN(), parameter_values=self._param_set, solver=self._solver)
-        soln = sim.solve(time, inputs={"Positive electrode porosity": por}, initial_soc=0.6, showprogress=True)
+        soln = sim.solve(time, inputs={"Positive electrode porosity": por}, initial_soc=0.5, showprogress=True)
         return soln["Voltage [V]"].data.mean()
 
 

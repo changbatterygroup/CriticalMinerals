@@ -1,5 +1,5 @@
 from dash import html, dcc, Input, Output
-import core.ids as c
+import core.configs.ids as c
 from Backend.plot import plot_reserves, add_demand_traces
 from core.schema import DemandParams
 from .base import Component
@@ -20,7 +20,7 @@ class ReservesComponent(Component):
             overlay_style={"visibility":"visible", "opacity": .5},
             type="circle"
             )
-        ],  style={"flex": "2"})
+        ])
         
 
     def register_callbacks(self, app):

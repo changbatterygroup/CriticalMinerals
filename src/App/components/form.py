@@ -1,26 +1,25 @@
 from dash import html, dcc, Input, Output
-from . import ids as c
+from core.configs import cathode_config as c, ids
 from .base import Component
 
 
 
 class FormComponent(Component):
-    def __init__(self, fields=[]):
-        self.cathodes = c.CATHODE_OPTIONS
+    def __init__(self, fields):
         self.fields = fields
         
     @property
     def layout(self):
         return html.Div([
             html.H3("Mineral Reserves Over Time"),
-            dcc.Dropdown(id=c.CATHODE_DROPDOWN_ID, options=self.cathodes, value=self.cathodes[0], clearable=False),
+            dcc.Dropdown(id=ids.CATHODE_DROPDOWN_ID, options=c.CATHODE_OPTIONS, value=c.CATHODE_DEFAULT, clearable=False),
             html.Br(),
             *[item for f in self.fields 
                    for item in (f.to_layout(), 
                                 html.Br()
                                 )
             ]
-        ], style={"flex": "1", "width": "12%", "padding": "5px"}, id="form-box")
+        ], id="form-box")
 
     def register_callbacks(self, app):
         

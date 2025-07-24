@@ -10,15 +10,7 @@ lfp_wrapper = DemandCalculator.from_config("LFP")
 
 def plot_reserves(reserve_df):
     minerals = reserve_df["Primary Mineral"].unique().tolist()
-
-    fig = make_subplots(
-        rows=2,
-        cols=2,
-        x_title="Year",
-        y_title="Reserves",
-        subplot_titles=minerals,
-    )
-
+    fig = make_subplots( rows=2, cols=2, x_title="Year",  y_title="Reserves", subplot_titles=minerals)
     fig.update_yaxes(type="log")
     fig.update_annotations(font_size=20)
     fig.update_layout(
@@ -39,6 +31,7 @@ def add_current_year_marker(fig, year=2024, row=None, col=None):
         text="Current Year",
         showarrow=True,
         arrowhead=2,
+        ax=-30,
         yshift=-50,
         row=row,
         col=col,
@@ -104,8 +97,8 @@ def add_inset_plot(fig, capacity_df, y_vals, mineral, row, col, subplot_domains,
     inset_width = min(dx * 0.21, 0.18)
     inset_height = min(dy * 0.25, 0.25)
 
-    inset_x = np.array([domain["x"][0] + dx * 0.2, domain["x"][0] + dx * 0.2 + inset_width])
-    inset_y = np.array([domain["y"][0] + dy * 0.1, domain["y"][0] + dy * 0.1 + inset_height])
+    inset_x = np.array([domain["x"][0] + dx * 0.75, domain["x"][0] + dx * 0.75 + inset_width])
+    inset_y = np.array([domain["y"][0] + dy * 0.12, domain["y"][0] + dy * 0.12 + inset_height])
 
     inset_id = 5 + row * 2 + col - 3  # unique axis ID
     xaxis_id = f"xaxis{inset_id}"

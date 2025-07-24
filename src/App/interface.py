@@ -25,20 +25,10 @@ class MainApp:
             html.H1("Critical Minerals Assessments"),
             html.P("This dashboard analyzes critical mineral reserves and battery material demand."),
             html.Br(),
-            
-            html.Div([x.render(self.app) for x in body_components], 
-                     style={
-                            "display": "flex",
-                            "flexDirection": "row",
-                            "gap": "10px"
-                        }
-            )
+            html.Div([x.render(self.app) for x in body_components])
         ])
 
     
     def run(self, port):
         self.server.run(debug=True, port=port)
 
-if __name__ == '__main__':
-    app = MainApp()
-    app.run(port=9342)
