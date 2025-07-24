@@ -1,18 +1,22 @@
 
 
 RESERVES_PLOT_ID = 'reserves-plot'
-BUTTON_ID = 'submit_button'
 BODY_ID = "placeholder"
 CATHODE_DROPDOWN_ID = "cathode-dropdown"
-CAPACITIES = {
-            "NMC622": 0.180, 
-            "NMC811": 0.200,
-            "NMC532": 0.170,
-            "NMC111": 0.160,
-            "LFP":    0.120,
-            "LCO":    0.140
-            }
 
+NMC_INPUT_ID = "nmc-input"
+NMC_LABEL_ID = "NMC-label"
+
+POROSITY_INPUT_ID = "porosity-input"
+POROSITY_LABEL_ID = "porosity-pct-label"
+
+THICKNESS_INPUT_ID = "thickness-input"
+THICKNESS_LABEL_ID = "thickness-pct-label"
+
+PARTICLE_SIZE_INPUT_ID = "particle-size-input"
+PARTICLE_SIZE_LABEL_ID = "particle-size-label"
+
+                      
 
 ELYTE = 0.005863
 CATHODE_SPECS = {
@@ -49,7 +53,7 @@ CATHODE_SPECS = {
                     }
                 }
 
-NMC = list(CATHODE_SPECS.keys())
+CATHODE_OPTIONS = list(CATHODE_SPECS.keys())
 
 
 

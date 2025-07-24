@@ -3,7 +3,6 @@ from functools import lru_cache
 from pathlib import Path
 
 class DataLoader:
-    """Handles data loading with caching"""
     
     ASSET_PATH = Path("Assets")
     

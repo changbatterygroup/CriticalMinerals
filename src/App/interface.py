@@ -2,15 +2,16 @@ from dash import Dash, html
 from .components.form import FormComponent
 from .components.reserves import ReservesComponent
 from . import DataLoader
-from typing import List
+from core.configs.form_config import get_fields
+
+body_components = [
+    FormComponent(fields=get_fields()),
+    ReservesComponent(DataLoader.get('cumulative_reserves'), DataLoader.get('capacity'))
+]
+
 
 class MainApp:
     
-    def __load_data(self):
-        self.reserves_data = DataLoader.get('cumulative_reserves')
-        self.capacity_data = DataLoader.get('capacity')
-        
-
     def __init__(self):
         self.app = Dash(__name__, external_stylesheets=[
             'https://codepen.io/chriddyp/pen/bWLwgP.css',
@@ -18,12 +19,6 @@ class MainApp:
         
         self.server = self.app.server
 
-        # Load data
-        self.__load_data()
-
-        # Initialize components
-        self.form = FormComponent()
-        self.reserves = ReservesComponent(self.reserves_data, self.capacity_data)
         
         # Layout
         self.app.layout = html.Div([
@@ -31,14 +26,12 @@ class MainApp:
             html.P("This dashboard analyzes critical mineral reserves and battery material demand."),
             html.Br(),
             
-            html.Div([
-                self.form.render(self.app),
-                self.reserves.render(self.app),
-            ], style={
-                    "display": "flex",
-                    "flexDirection": "row",  # use "column" for vertical layout
-                    "gap": "10px"
-                }
+            html.Div([x.render(self.app) for x in body_components], 
+                     style={
+                            "display": "flex",
+                            "flexDirection": "row",
+                            "gap": "10px"
+                        }
             )
         ])
 

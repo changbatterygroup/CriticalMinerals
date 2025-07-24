@@ -1,12 +1,36 @@
-from Backend.DemandCalculator import DemandCalculator
 from Backend.Model import DemandCalculator
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
 
-
+from core.configs.cathode_config import CATHODE_SPECS
+from core.schema import DemandParams
 
 lfp_wrapper = DemandCalculator.from_config("LFP")
+
+def plot_reserves(reserve_df):
+    minerals = reserve_df["Primary Mineral"].unique().tolist()
+
+    fig = make_subplots(
+        rows=2,
+        cols=2,
+        x_title="Year",
+        y_title="Reserves",
+        subplot_titles=minerals,
+    )
+
+    fig.update_yaxes(type="log")
+    fig.update_annotations(font_size=20)
+    fig.update_layout(
+        title="Cumulative Growth in Reserves vs Demand Over the Years",
+        height=700,
+        showlegend=True,
+        legend1=dict(title=dict(text="Mineral")),
+    )
+
+    minerals_used, subplot_domains = add_reserve_traces(fig, reserve_df)
+    return fig, minerals_used, subplot_domains
+
 
 def add_current_year_marker(fig, year=2024, row=None, col=None):
     fig.add_vline(x=year, line_dash="dash", line_color="red", row=row, col=col)
@@ -23,7 +47,6 @@ def add_current_year_marker(fig, year=2024, row=None, col=None):
 
 def add_reserve_traces(fig, data):
     minerals = data["Primary Mineral"].unique()
-    
     subplot_domains = {}
 
     for i, mineral in enumerate(minerals):
@@ -122,29 +145,28 @@ def add_inset_plot(fig, capacity_df, y_vals, mineral, row, col, subplot_domains,
     )
 
 
+def add_demand_traces(fig, capacity_df, minerals, subplot_domains, category ,cathode, inputs: DemandParams):
 
-def add_demand_traces(fig, capacity_df, minerals, subplot_domains,
-                      nmc_pct, nmc_type, por, radius, thickness):
-    
-
+    c2_wrapper = DemandCalculator.from_config(cathode)
     capacity_df = capacity_df.set_index("Year")
-    needed_nmc = capacity_df["Capacity"] * (nmc_pct / 100)
-    needed_lfp = capacity_df["Capacity"] * (1 - (nmc_pct / 100))
-    
 
-    c2_wrapper = DemandCalculator.from_config(nmc_type)
+    needed_nmc = capacity_df["Capacity"] * capacity_df[CATHODE_SPECS[cathode]['category']]
+    needed_lfp = capacity_df["Capacity"] * capacity_df[CATHODE_SPECS['LFP']['category']]
+    if category in capacity_df.columns:
+        needed_nmc *= capacity_df[category]
+        needed_lfp *= capacity_df[category]
+
 
 
     t = np.linspace(0, 3600, 100)
-    lfp_demand = lfp_wrapper.run(needed_lfp, t, por / 100, radius * 1e-6, thickness * 1e-6)
-    c2_demand= c2_wrapper.run(needed_nmc, t, por / 100, radius * 1e-6, thickness * 1e-6)
-    
-    total = lfp_demand
-    if nmc_type != "LFP":
-        total += c2_demand
-    
-    total_Li, Co_mass, Mn_mass, Ni_mass = total
+    lfp_demand = lfp_wrapper.run(needed_lfp, t, inputs.porosity, inputs.radius, inputs.thickness)
+    c2_demand = c2_wrapper.run(needed_nmc, t, inputs.porosity, inputs.radius, inputs.thickness)
 
+    total = lfp_demand
+    if cathode != "LFP":
+        total += c2_demand
+
+    total_Li, Co_mass, Mn_mass, Ni_mass = total
 
     mineral_data_map = {
         "Cobalt": Co_mass,
@@ -178,49 +200,8 @@ def add_demand_traces(fig, capacity_df, minerals, subplot_domains,
             col=col,
         )
 
-
         # Find corresponding reserve trace
         reserve_trace = next((t for t in fig.data if t.name == mineral and t.marker.color == "black"), None)
         if reserve_trace:
             add_inset_plot(fig, capacity_df, y_vals, mineral, row, col, subplot_domains, color_map[mineral])
-
-
-
-
-def plot_reserves(reserve_df):
-    minerals = reserve_df["Primary Mineral"].unique().tolist()
-
-    fig = make_subplots(
-        rows=2,
-        cols=2,
-        x_title="Year",
-        y_title="Reserves",
-        subplot_titles=minerals,
-    )
-
-    fig.update_yaxes(type="log")
-    fig.update_annotations(font_size=20)
-    fig.update_layout(
-        title="Cumulative Growth in Reserves vs Demand Over the Years",
-        height=700,
-        showlegend=True,
-        legend1=dict(title=dict(text="Mineral")),
-    )
-
-    minerals_used, subplot_domains = add_reserve_traces(fig, reserve_df)
-
-    return fig, minerals_used, subplot_domains
-
-
-
-def plot_reserves_and_demand(reserve_df, capacity_df, nmc_pct=70, nmc_type="622", por=30, radius=10, thickness=100):
-
-    fig, minerals_used, subplot_domains = plot_reserves(reserve_df)
-    
-    add_demand_traces(fig, capacity_df, minerals_used, subplot_domains,
-                      nmc_pct, nmc_type, por, radius, thickness
-                      )
-
-    return fig
-
 
