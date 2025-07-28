@@ -1,4 +1,4 @@
-from App.interface import MainApp
+from ui.interface import MainApp
 
 
 main_app = MainApp()

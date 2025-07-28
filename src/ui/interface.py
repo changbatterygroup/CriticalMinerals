@@ -1,12 +1,14 @@
 from dash import Dash, html
-from .components.form import FormComponent
-from .components.reserves import ReservesComponent
+from components.form import FormComponent
+from components.reserves import ReservesComponent
 from . import DataLoader
-from core.configs.form_config import get_fields
+from core.form_config import get_fields
 
 body_components = [
     FormComponent(fields=get_fields()),
-    ReservesComponent(DataLoader.get('cumulative_reserves'), DataLoader.get('capacity'))
+    ReservesComponent(DataLoader.get('cumulative_reserves'),
+                      DataLoader.get('capacity')
+                      )
 ]
 
 
