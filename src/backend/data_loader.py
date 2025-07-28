@@ -4,7 +4,7 @@ from pathlib import Path
 
 class DataLoader:
     
-    ASSET_PATH = Path("Assets")
+    ASSET_PATH = Path("assets")
     
     @staticmethod
     @lru_cache(maxsize=1)
