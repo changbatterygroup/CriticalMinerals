@@ -40,7 +40,7 @@ CATHODE_MODEL_TEMPLATES = {
     "NMC532": "Mohtat2020",
     "NMC111":  "Chen2020",
     "LFP": "Prada2013",
-    "NCA": "Chen2020"
+    "NCA": "NCA_Kim2011"
 }
 
 
