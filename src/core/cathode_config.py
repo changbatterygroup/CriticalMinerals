@@ -1,4 +1,5 @@
 ELYTE = 0.005863
+CURRENT = 0.5
 CATHODE_SPECS = {
     "NMC811": {
         "capacity": 0.200,

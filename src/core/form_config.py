@@ -45,7 +45,7 @@ def get_fields():
         FormFields(
             input_id=c.POROSITY_INPUT_ID,
             label_id=c.POROSITY_LABEL_ID,
-            val_range=(10, 30),
+            val_range=(10, 50),
             step=2,
             marker_step=5,
             default_value=15,

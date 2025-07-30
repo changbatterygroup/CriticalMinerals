@@ -1,6 +1,10 @@
 from dataclasses import dataclass
-from typing import List, Self, Dict
+from typing import List, Dict
+
 import numpy as np
+
+from core.cathode_config import CURRENT
+
 
 @dataclass
 class Result:
@@ -35,19 +39,22 @@ class DemandParams:
     porosity: float
     thickness: float
     radius: float
+    current: float = CURRENT
 
     @classmethod
     def scale(cls, porosity, thickness, radius):
         return cls(
             porosity=porosity / 100,
             thickness=thickness * 1e-6,
-            radius = radius * 1e-6
+            radius = radius * 1e-6,
         )
 
     def sim_params(self) -> Dict[str, float]:
         """Convert to dictionary for simulation parameters"""
         return {
+            "Current function [A]": self.current,
             "Positive electrode porosity": self.porosity,
             "Positive particle radius [m]": self.radius,
             "Positive electrode thickness [m]": self.thickness
         }
+

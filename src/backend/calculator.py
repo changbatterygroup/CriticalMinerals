@@ -13,7 +13,6 @@ class DemandCalculator:
 
     def get_avg_voltage(self, time, inputs: DemandParams):
         self.template.update(inputs.sim_params())
-        self.template["Current function [A]"] = 0.5
 
         solver = pybamm.IDAKLUSolver(rtol=1e-3, atol=1e-4)
         sim = pybamm.Simulation(
