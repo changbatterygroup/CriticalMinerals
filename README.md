@@ -66,6 +66,8 @@ First clone this repository.
 
 ### Install Dependencies
 
+Make sure you are in the `src` directory
+
 ```bash
 pip install -r requirements.txt
 ```
