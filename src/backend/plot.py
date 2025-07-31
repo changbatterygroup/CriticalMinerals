@@ -42,7 +42,6 @@ class ReservesPlot:
 
             return self
 
-
         def add_reserves(self):
             for i, mineral in enumerate(self.p.minerals):
                 mineral_data = self.p.reserves_df[self.p.reserves_df["Primary Mineral"] == mineral]
@@ -207,10 +206,5 @@ class ReservesPlot:
 
             return self
 
-
-
-
         def plot(self):
             return self.p.fig
-
-
