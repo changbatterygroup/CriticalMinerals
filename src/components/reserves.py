@@ -1,7 +1,7 @@
 from dash import html, dcc, Input, Output
 import core.ids as c
 from backend.plot import ReservesPlot
-from backend.schema import DemandParams
+from backend.schema import DemandParams, Result
 from backend.factory import CalculatorFactory
 from .base import Component
 import numpy as np
@@ -14,7 +14,7 @@ class ReservesComponent(Component):
         self.reserves_data = reserves_data
         self.capacity_data = capacity_data
         self.base = ReservesPlot.Builder(self.reserves_data, self.capacity_data)
-        
+
     @property    
     def layout(self):
         return html.Div([
@@ -32,7 +32,7 @@ class ReservesComponent(Component):
         t = np.linspace(0, 3600, 100+1)
         default = Series(1, index=self.capacity_data.index)
 
-        def calculate(time, inputs: DemandParams) -> dict:
+        def calculate(time, inputs: DemandParams) -> Result:
             total_demand = 0
             for i, (cathode, data) in enumerate(CATHODE_SPECS.items()):
                 model = calc.create(cathode)
@@ -40,16 +40,8 @@ class ReservesComponent(Component):
                 breakdown = self.capacity_data.get(data.get('category'), default)
                 total_demand += res * breakdown.to_numpy()
 
-            total_Li, Co_mass, Mn_mass, Ni_mass = total_demand
 
-            mineral_data_map = {
-                "Cobalt": Co_mass,
-                "Lithium": total_Li,
-                "Nickel": Ni_mass,
-                "Manganese": Mn_mass,
-            }
-
-            return mineral_data_map
+            return Result(*total_demand)
 
 
         @app.callback(
@@ -67,11 +59,10 @@ class ReservesComponent(Component):
                    .reset()
                    .add_reserves()
                    .add_current_year_marker(2024)
-                   .initialize_inset_domains()
-                   .add_demand_traces(trace_map)
-                   .add_inset_traces()
+                   .initialize_insets()
+                   .add_demand_traces(trace_map.to_dict())
+                   .update_inset_traces()
                    .plot())
-
             return fig
 
 

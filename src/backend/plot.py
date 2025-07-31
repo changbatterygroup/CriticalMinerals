@@ -46,6 +46,7 @@ class ReservesPlot:
         def add_reserves(self):
             for i, mineral in enumerate(self.p.minerals):
                 mineral_data = self.p.reserves_df[self.p.reserves_df["Primary Mineral"] == mineral]
+                self.inset_axes[mineral] = {}
                 row, col = i // 2 + 1, i % 2 + 1
 
                 self.p.fig.add_trace(
@@ -63,21 +64,23 @@ class ReservesPlot:
                     col=col,
                 )
 
+
+
             return self
 
         def add_current_year_marker(self, year=2024):
-           annotation = go.layout.Annotation(
+            annotation = go.layout.Annotation(
                 x=year,
                 text="Current Year",
                 showarrow=True,
                 arrowhead=2,
                 ax=-30,
             )
-           self.p.fig.add_vline(x=year, line_dash="dash", line_color="red", annotation=annotation ,
+            self.p.fig.add_vline(x=year, line_dash="dash", line_color="red", annotation=annotation ,
                                  annotation_position="bottom left")
-           return self
+            return self
 
-        def initialize_inset_domains(self):
+        def initialize_insets(self):
             subplot_domains = {}
             for i, mineral in enumerate(self.p.minerals):
 
@@ -105,19 +108,24 @@ class ReservesPlot:
                 inset_axis_name_y = f"y{inset_id}"
 
 
-                self.inset_axes[mineral] = {
+                self.inset_axes[mineral].update({
+
                     "xaxis": xaxis_id,
                     "yaxis": yaxis_id,
                     "xaxis_name": inset_axis_name_x,
-                    "yaxis_name": inset_axis_name_y
-                }
+                    "yaxis_name": inset_axis_name_y,
+                    "x": self.p.capacity_df["Year"].values,
+                    "y": []
+                })
 
 
                 # Define inset axes
                 self.p.fig.update_layout({
-                    xaxis_id: dict(domain=inset_x, anchor=f"y{inset_id}", range=[2025.5, 2025.6], nticks=3),
-                    yaxis_id: dict(domain=inset_y, anchor=f"x{inset_id}")
+                    xaxis_id: dict(domain=inset_x, anchor=f"y{inset_id}", nticks=3),
+                    yaxis_id: dict(domain=inset_y, anchor=f"x{inset_id}", nticks=3)
                 })
+
+
 
                 # Draw border around inset
                 self.p.fig.add_shape(
@@ -152,40 +160,34 @@ class ReservesPlot:
                     col=col,
                 )
 
-                self.inset_axes[mineral]['x'] = self.p.capacity_df["Year"].values
                 self.inset_axes[mineral]['y'] = y_vals
 
             return self
 
-        def add_inset_traces(self):
 
-            s = slice(-6, -4, 1)
+
+        def update_inset_traces(self):
+
 
             for mineral, data in self.inset_axes.items():
-                demand_x = data['x'][s]
-                demand_y = data['y'][s] / 1e3
-
-                # Fit a small linear trend
-                w = np.polyfit(np.array(demand_x), np.array(demand_y), 1)[::-1]
-                x_r = demand_x + np.array([0.4, 0.7 - 1])
-                x_r_b = np.vstack([np.ones_like(x_r), x_r])
-                y_r = x_r_b.T @ w
-
-                # Find y-range
-                k = 5
-
-                y_min = np.min([y_r[0] + k, y_r[1] - k]).item()
-
-                y_max = np.max([y_r[0] + k, y_r[1] - k]).item()
-
                 xaxis_id = data['xaxis']
                 yaxis_id = data['yaxis']
-                inset_axis_name_x = data['xaxis_name']
-                inset_axis_name_y = data['yaxis_name']
+                demand_x = data['x']
+                demand_y = data['y'] / 1e3
 
+                m = (demand_x >= 2025) & (demand_x <= 2026)
+                demand_x_zoom = demand_x[m]
+
+                # Increase resolution through linear interpolation
+                n = 1000
+                X_zoom_interpolated = np.linspace(demand_x_zoom[0], demand_x_zoom[-1], n)
+                Y_zoom_interpolated = np.interp(X_zoom_interpolated, demand_x, demand_y)
+
+                # Pick random indices and adjust the axis window
+                ix = [500, 510]
                 self.p.fig.update_layout({
-                    xaxis_id: dict(anchor=inset_axis_name_y, range=[2025.5, 2025.6], nticks=3),
-                    yaxis_id: dict(anchor=inset_axis_name_x, range=[y_min, y_max])
+                    xaxis_id: dict(range=X_zoom_interpolated[ix]),
+                    yaxis_id: dict(range=Y_zoom_interpolated[ix])
                 })
 
 
@@ -198,34 +200,17 @@ class ReservesPlot:
                         name=f"{mineral} demand (zoom)",
                         line=dict(color=self.color_map[mineral]),
                         showlegend=False,
-                        xaxis=inset_axis_name_x,
-                        yaxis=inset_axis_name_y,
+                        xaxis=data['xaxis_name'],
+                        yaxis=data['yaxis_name'],
                     )
                 )
 
             return self
 
+
+
+
         def plot(self):
             return self.p.fig
-
-
-if __name__ == '__main__':
-    import pandas as pd
-    import plotly.io as pio
-
-    pio.renderers.default = "browser"
-
-    reserves = pd.read_parquet("../assets/CumulativeReserves.parquet")
-    capacity = pd.read_parquet("../assets/Capacity.parquet")
-
-    f = (ReservesPlot.Builder(reserves, capacity)
-         .add_reserves()
-         .add_current_year_marker(2024)
-         .initialize_inset_domains()
-
-    ).plot()
-    f.show()
-
-
 
 

@@ -13,6 +13,14 @@ class Result:
     manganese: np.ndarray
     nickel: np.ndarray
 
+    def to_dict(self) -> Dict:
+        return {
+            "Lithium": self.lithium,
+            "Cobalt": self.cobalt,
+            "Manganese": self.manganese,
+            "Nickel": self.nickel
+        }
+
 
 @dataclass
 class Cathode:
