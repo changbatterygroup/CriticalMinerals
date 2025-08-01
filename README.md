@@ -37,17 +37,22 @@ The interactive dashboard is built using **Dash** and is located in the `src/` d
 
 ```
 ├── src/                 # Dash app source code
-├── requirements.txt     # Python dependencies
+├──     requirements.txt        # Python dependencies
+├──     ...      
 ├── README.md            # Project description and setup
 └── ...                  # Additional analysis files
 ```
 
 ---
 
-## 🗂️ Data Sources
+## 🗂️ Data Sources (On Onedrive)
 
-* **Battery Production Capacity**: Includes estimated GWh capacities per year (2010–2025), broken down by cathode type.
-* **Mining Dataset**: Extracted from **S\&P Global** (2010–2025), detailing the supply potential of key critical minerals.
+* **Capacity.xlsx**: Includes estimated GWh capacities per year (2010–2025), broken down by cathode type.
+* **SPGlobal_MetalsAndMiningProperties-Combined-Dec-2024.xlsx**: Extracted from **S\&P Global** (2010–2025), detailing the supply potential of key critical minerals.
+
+
+The dashboard uses parquet copies for privacy and serializability. Any changes to the data
+means these would also need to be recreated. These files are found in `./src/assets`
 
 ---
 
@@ -66,7 +71,7 @@ First clone this repository.
 
 ### Install Dependencies
 
-Make sure you are in the `src` directory
+Make sure you are in the `src` directory. Then run
 
 ```bash
 pip install -r requirements.txt
@@ -101,24 +106,12 @@ Located in the `notebooks/` directory, these provide detailed:
 * Sensitivity analysis of parameters
 * Mineral mass estimations across chemistries
 
----
 
-## 🔍 Future Work
-
-* Expand dashboard with scenario toggles
-* Integrate recycling projections
-* Improve geospatial analysis of mining sources
-
----
-
+----
 ## 🤝 Contributing
-
-Contributions, issue reports, or suggestions are welcome.
-
-
-
-
-
+Contributions, issue reports, or suggestions are welcome. 
+After cloning the repository, any changes committed within the
+`src` folder will automatically trigger a re-deploy on the server.
 ---
 
 ## 📄 License
