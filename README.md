@@ -100,7 +100,7 @@ gunicorn app:server
 
 ## 📓 Notebooks
 
-Located in the `notebooks/` directory, these provide detailed:
+All the notebooks provide key insights on
 
 * Simulation logic and assumptions
 * Sensitivity analysis of parameters
