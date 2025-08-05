@@ -1,6 +1,3 @@
-Here's a clean, professional `README.md` file for your Critical Minerals Project:
-
----
 
 # ⚒️ Critical Minerals Demand & Supply Simulation
 
